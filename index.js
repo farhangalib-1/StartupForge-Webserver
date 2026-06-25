@@ -61,6 +61,41 @@ async function run() {
       const result = await cursor.toArray()
       res.send(result)
     })
+    app.get("/api/my-startups/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const result = await startupCollections.findOne({
+    _id: new ObjectId(id),
+  });
+
+  res.send(result);
+});
+app.delete("/api/my-startups/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const result = await startupCollections.deleteOne({
+    _id: new ObjectId(id),
+  });
+
+  res.send(result);
+});
+app.patch("/api/my-startups/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const data = req.body;
+
+
+  const result = await startupCollections.updateOne(
+    {
+      _id: new ObjectId(id),
+    },
+    {
+      $set: data,
+    }
+  );
+
+  res.send(result);
+});
   //await client.connect();
   //await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
