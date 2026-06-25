@@ -105,6 +105,24 @@ app.patch("/api/my-startups/:id", async (req, res) => {
 
   res.send(result);
 });
+app.patch("/api/opportunities/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const data = req.body;
+
+  delete data.status;
+
+  const result = await opportunitiesCollections.updateOne(
+    {
+      _id: new ObjectId(id),
+    },
+    {
+      $set: data,
+    }
+  );
+
+  res.send(result);
+});
   //await client.connect();
   //await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
