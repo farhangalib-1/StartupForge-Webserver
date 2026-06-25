@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = process.env.MONGODB_URI;
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,8 +19,27 @@ async function run() {
 
     
     const db = client.db("StartupForge")
+    const userCollection = db.collection("user")
     const startupCollections = db.collection("startups")
     const opportunitiesCollections = db.collection("opportunities")
+    const paymentCollections = db.collection("payments")
+    app.post("/payment", async(req, res)=>{
+      const {sessionId, userId, priceId} = req.body
+      const isExist = await paymentCollections.findOne({sessionId})
+      if(isExist){
+        return res.json({message: "Already Exist"})
+      }
+      const result = await paymentCollections.insertOne({
+        sessionId,
+        userId,
+        priceId
+      })
+      await userCollection.updateOne(
+        {_id: new ObjectId(userId)},
+        {$set: {role: "pro"}}
+      );
+      res.json({message:"payment successful!!!"})
+    })
     app.post("/api/startups", async(req, res)=>{
         const body = req.body
         const result = await startupCollections.insertOne(body)
