@@ -202,6 +202,15 @@ app.get("/api/ownstartups/:userId", async (req, res) => {
   res.send(result);
 });
 
+app.get("/api/myopportunities/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const result = await opportunitiesCollections
+    .find({ id })
+    .toArray();
+
+  res.send(result);
+});
 
 app.get("/api/featured-startups", async(req, res)=>{
   const cursor = await startupCollections.find({status: "approved"})
