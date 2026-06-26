@@ -203,6 +203,11 @@ app.get("/api/ownstartups/:userId", async (req, res) => {
 });
 
 
+app.get("/api/featured-startups", async(req, res)=>{
+  const cursor = await startupCollections.find({status: "approved"})
+  const result = await cursor.toArray()
+  res.send(result)
+})
 
   //await client.connect();
   //await client.db("admin").command({ ping: 1 });
